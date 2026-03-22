@@ -93,7 +93,7 @@ make
 ### NFEXEC
 
 <!-- TODO: Replace with GitHub image URL after upload -->
-![nfexec-opsec](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/nfexec-flow.svg)
+![nfexec-opsec](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/nfexec-opsec.svg)
 
 ## Acknowledgments
 
