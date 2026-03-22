@@ -24,7 +24,7 @@ from havoc import Demon, RegisterCommand
 # Configuration — edit BOF_DIR to your installation path
 # ================================================================
 
-BOF_DIR = "/usr/share/havoc/data/extensions/NFEXEC/bin"
+BOF_DIR = "/usr/share/havoc/data/extensions/NOFILTER-NFEXEC/bin"
 
 # ================================================================
 # Native command auto-detection
