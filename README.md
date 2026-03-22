@@ -101,7 +101,7 @@ make
 
 ## Acknowledgments
 
-The NOFILTER privilege escalation technique was discovered and presented by **Ron Ben-Yizhak** ([@RonB_Y](https://twitter.com/RonB_Y)), Security Researcher at **Deep Instinct**, at [DEF CON 31](https://defcon.org/html/defcon-31/dc-31-speakers.html) (August 2023). This implementation would not exist without his outstanding research into the Windows Filtering Platform internals.
+The NOFILTER privilege escalation technique was discovered and presented by **Ron Ben-Yizhak** ([@RonB_Y](https://twitter.com/RonB_Y)), Security Researcher at **Deep Instinct**, at DEF CON 31 (August 2023). This implementation would not exist without his outstanding research into the Windows Filtering Platform internals.
 
 - **DEF CON 31 talk**: [#NoFilter: Abusing Windows Filtering Platform for Privilege Escalation](https://media.defcon.org/DEF%20CON%2031/DEF%20CON%2031%20presentations/Ron%20Ben-Yizhak%20-%20NoFilter%20Abusing%20Windows%20Filtering%20Platform%20for%20privilege%20escalation.pdf)
 - **Deep Instinct blog**: [NoFilter — Abusing Windows Filtering Platform for Privilege Escalation](https://www.deepinstinct.com/blog/nofilter-abusing-windows-filtering-platform-for-privilege-escalation)
