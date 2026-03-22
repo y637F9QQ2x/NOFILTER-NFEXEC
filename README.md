@@ -25,6 +25,10 @@ token revert                          # drop back to original context
 
 nfexec auto-detects ~100 native commands (whoami, ipconfig, net, sc, reg, ...) and routes them to exec mode. Everything else goes to PS mode. Use `-ps` or `-exec` to override.
 
+## Demo
+
+![NOFILTER-NFEXEC_DEMO](https://github.com/user-attachments/assets/76efa4a3-a337-4314-bac5-6847e84f1a92)
+
 ## OPSEC
 
 ### NOFILTER
