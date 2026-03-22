@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 1518" font-family="Segoe UI,Arial,sans-serif" font-size="13">
+  <rect width="580" height="1518" fill="#fff"/>
+  <text x="290" y="30" text-anchor="middle" fill="#111" font-size="17" font-weight="bold">NFEXEC — OPSEC Measures</text>
+  <text x="290" y="48" text-anchor="middle" fill="#888" font-size="11">Why each protection exists and how it works</text>
+  <rect x="15" y="68" width="550" height="154" rx="6" fill="#eafaf1" stroke="#2e8b57" stroke-width="1.5"/>
+  <text x="33" y="90" fill="#2e8b57" font-size="13" font-weight="bold">1. Indirect Syscalls (PEB Walk + Halos Gate)</text>
+  <text x="33" y="114" fill="#111" font-size="12" font-weight="bold">Threat:</text>
+  <text x="103" y="114" fill="#444" font-size="12">EDR hooks ntdll.dll prologues with JMP.</text>
+  <text x="103" y="130" fill="#444" font-size="12">Calling ntdll passes through these hooks.</text>
+  <text x="33" y="156" fill="#111" font-size="12" font-weight="bold">Solution:</text>
+  <text x="103" y="156" fill="#444" font-size="12">1. Walk PEB to find ntdll base (zero API calls).</text>
+  <text x="103" y="172" fill="#444" font-size="12">2. Parse PE exports via FNV-1a hash (no name strings).</text>
+  <text x="103" y="188" fill="#444" font-size="12">3. Extract SSN. If hooked, Halos Gate scans neighbors.</text>
+  <text x="103" y="204" fill="#444" font-size="12">4. Jump to syscall;ret gadget (hook bypassed).</text>
+  <rect x="15" y="236" width="550" height="138" rx="6" fill="#eafaf1" stroke="#2e8b57" stroke-width="1.5"/>
+  <text x="33" y="258" fill="#2e8b57" font-size="13" font-weight="bold">2. Return Address Spoofing</text>
+  <text x="33" y="282" fill="#111" font-size="12" font-weight="bold">Threat:</text>
+  <text x="103" y="282" fill="#444" font-size="12">EDR stack-walks during syscall, checks caller.</text>
+  <text x="103" y="298" fill="#444" font-size="12">Return addr pointing to BOF memory is flagged.</text>
+  <text x="33" y="324" fill="#111" font-size="12" font-weight="bold">Solution:</text>
+  <text x="103" y="324" fill="#444" font-size="12">ScStub pushes a ret gadget in ntdll as fake return.</text>
+  <text x="103" y="340" fill="#444" font-size="12">EDR sees [RSP] = ntdll address (legitimate).</text>
+  <text x="103" y="356" fill="#444" font-size="12">After syscall, gadget pops real return address.</text>
+  <rect x="15" y="388" width="550" height="170" rx="6" fill="#eaf0fa" stroke="#2c5aa0" stroke-width="1.5"/>
+  <text x="33" y="410" fill="#2c5aa0" font-size="13" font-weight="bold">3. Patchless AMSI/ETW (Hardware Breakpoints)</text>
+  <text x="33" y="434" fill="#111" font-size="12" font-weight="bold">Threat:</text>
+  <text x="103" y="434" fill="#444" font-size="12">CLR calls AmsiScanBuffer to scan, EtwEventWrite to log.</text>
+  <text x="103" y="450" fill="#444" font-size="12">Malicious scripts get blocked or recorded.</text>
+  <text x="33" y="476" fill="#111" font-size="12" font-weight="bold">Solution:</text>
+  <text x="103" y="476" fill="#444" font-size="12">DR0/DR1 set to AmsiScanBuffer/EtwEventWrite addrs.</text>
+  <text x="103" y="492" fill="#444" font-size="12">CPU pauses, our VEH handler fires.</text>
+  <text x="103" y="508" fill="#444" font-size="12">AMSI: writes result=CLEAN, returns S_OK.</text>
+  <text x="103" y="524" fill="#444" font-size="12">ETW: returns 0, skips function. Nothing logged.</text>
+  <text x="103" y="540" fill="#444" font-size="12">Zero bytes modified. Integrity checks pass.</text>
+  <rect x="15" y="572" width="550" height="106" rx="6" fill="#f7f7f7" stroke="#bbb" stroke-width="1.5"/>
+  <text x="33" y="594" fill="#333" font-size="13" font-weight="bold">4. PEB-Based Function Resolution (No DFR)</text>
+  <text x="33" y="618" fill="#111" font-size="12" font-weight="bold">Threat:</text>
+  <text x="103" y="618" fill="#444" font-size="12">DFR __imp_ symbols reveal all API calls in COFF.</text>
+  <text x="33" y="644" fill="#111" font-size="12" font-weight="bold">Solution:</text>
+  <text x="103" y="644" fill="#444" font-size="12">LdrLoadDll, RtlAddVEH, CreateProcessWithTokenW resolved</text>
+  <text x="103" y="660" fill="#444" font-size="12">via PEB, export table, FNV-1a hash. No name strings.</text>
+  <rect x="15" y="692" width="550" height="122" rx="6" fill="#f7f7f7" stroke="#bbb" stroke-width="1.5"/>
+  <text x="33" y="714" fill="#333" font-size="13" font-weight="bold">5. ADVAPI32 Import Elimination</text>
+  <text x="33" y="738" fill="#111" font-size="12" font-weight="bold">Threat:</text>
+  <text x="103" y="738" fill="#444" font-size="12">ADVAPI32 CreateProcessWithTokenW in COFF reveals</text>
+  <text x="103" y="754" fill="#444" font-size="12">attack technique immediately.</text>
+  <text x="33" y="780" fill="#111" font-size="12" font-weight="bold">Solution:</text>
+  <text x="103" y="780" fill="#444" font-size="12">advapi32.dll loaded via LdrLoadDll, function found via</text>
+  <text x="103" y="796" fill="#444" font-size="12">PE export hash. ADVAPI32 imports in COFF: zero.</text>
+  <rect x="15" y="828" width="550" height="122" rx="6" fill="#f7f7f7" stroke="#bbb" stroke-width="1.5"/>
+  <text x="33" y="850" fill="#333" font-size="13" font-weight="bold">6. KERNEL32 Minimization (15 to 5)</text>
+  <text x="33" y="874" fill="#111" font-size="12" font-weight="bold">Threat:</text>
+  <text x="103" y="874" fill="#444" font-size="12">KERNEL32 is the most heavily hooked DLL.</text>
+  <text x="33" y="900" fill="#111" font-size="12" font-weight="bold">Solution:</text>
+  <text x="103" y="900" fill="#444" font-size="12">LoadLibraryA, GetProcAddress, Get/SetThreadContext,</text>
+  <text x="103" y="916" fill="#444" font-size="12">VEH, LocalAlloc/Free, Sleep replaced with NTDLL/PEB.</text>
+  <text x="103" y="932" fill="#444" font-size="12">5 remain: CreatePipe, ReadFile, PeekNamedPipe, MB/WC.</text>
+  <rect x="15" y="964" width="550" height="122" rx="6" fill="#f7f7f7" stroke="#bbb" stroke-width="1.5"/>
+  <text x="33" y="986" fill="#333" font-size="13" font-weight="bold">7. COFF Symbol Sanitization (34 symbols)</text>
+  <text x="33" y="1010" fill="#111" font-size="12" font-weight="bold">Threat:</text>
+  <text x="103" y="1010" fill="#444" font-size="12">PebNtdll, ExtractSSN, ScStub, VehCb in symbol table</text>
+  <text x="103" y="1026" fill="#444" font-size="12">reveal all techniques to any analyst.</text>
+  <text x="33" y="1052" fill="#111" font-size="12" font-weight="bold">Solution:</text>
+  <text x="103" y="1052" fill="#444" font-size="12">objcopy --redefine-syms replaces all 34 with</text>
+  <text x="103" y="1068" fill="#444" font-size="12">_r0, _g3, _d6, etc. objdump shows nothing useful.</text>
+  <rect x="15" y="1100" width="550" height="122" rx="6" fill="#f7f7f7" stroke="#bbb" stroke-width="1.5"/>
+  <text x="33" y="1122" fill="#333" font-size="13" font-weight="bold">8. Opaque Error Messages</text>
+  <text x="33" y="1146" fill="#111" font-size="12" font-weight="bold">Threat:</text>
+  <text x="103" y="1146" fill="#444" font-size="12">Token duplication failed reveals technique.</text>
+  <text x="103" y="1162" fill="#444" font-size="12">nfexec prefix could become a signature.</text>
+  <text x="33" y="1188" fill="#111" font-size="12" font-weight="bold">Solution:</text>
+  <text x="103" y="1188" fill="#444" font-size="12">All 23 messages replaced with [!] E00-E19. Lookup table</text>
+  <text x="103" y="1204" fill="#444" font-size="12">in source comments (stripped at compile time).</text>
+  <rect x="15" y="1236" width="550" height="122" rx="6" fill="#eafaf1" stroke="#2e8b57" stroke-width="1.5"/>
+  <text x="33" y="1258" fill="#2e8b57" font-size="13" font-weight="bold">9. Memory Scrubbing + ScScrub</text>
+  <text x="33" y="1282" fill="#111" font-size="12" font-weight="bold">Threat:</text>
+  <text x="103" y="1282" fill="#444" font-size="12">Post-execution: ntdll base, gadget, SSN, strings</text>
+  <text x="103" y="1298" fill="#444" font-size="12">linger in memory. Dump recovers them.</text>
+  <text x="33" y="1324" fill="#111" font-size="12" font-weight="bold">Solution:</text>
+  <text x="103" y="1324" fill="#444" font-size="12">ScScrub() zeros all syscall globals. XOR strings</text>
+  <text x="103" y="1340" fill="#444" font-size="12">zeroed after use. Cmdline + STARTUPINFO zeroed.</text>
+  <rect x="15" y="1372" width="550" height="122" rx="6" fill="#f7f7f7" stroke="#bbb" stroke-width="1.5"/>
+  <text x="33" y="1394" fill="#333" font-size="13" font-weight="bold">10. .bss Section Elimination</text>
+  <text x="33" y="1418" fill="#111" font-size="12" font-weight="bold">Threat:</text>
+  <text x="103" y="1418" fill="#444" font-size="12">Havoc BOF loader skips .bss. Globals = 0 go to .bss</text>
+  <text x="103" y="1434" fill="#444" font-size="12">(never mapped), accessing crashes Demon.</text>
+  <text x="33" y="1460" fill="#111" font-size="12" font-weight="bold">Solution:</text>
+  <text x="103" y="1460" fill="#444" font-size="12">All globals use section .data attribute.</text>
+  <text x="103" y="1476" fill="#444" font-size="12">PVOID = (PVOID)1 sentinel. .bss size = 00000000.</text>
+</svg>

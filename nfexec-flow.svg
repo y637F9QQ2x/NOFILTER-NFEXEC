@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 1018" font-family="Segoe UI,Arial,sans-serif" font-size="13">
+  <defs><marker id="a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#333"/></marker></defs>
+  <rect width="820" height="1018" fill="#fff"/>
+  <text x="410" y="32" text-anchor="middle" fill="#111" font-size="18" font-weight="bold">NFEXEC — How It Works</text>
+  <text x="410" y="52" text-anchor="middle" fill="#888" font-size="12">Execute commands as SYSTEM — auto-routes native exe vs PS cmdlets</text>
+  <rect x="30" y="72" width="760" height="100" rx="6" fill="#f7f7f7" stroke="#bbb"/>
+  <text x="50" y="92" fill="#555" font-size="12" font-weight="bold">OPERATOR SIDE (Python auto-routing)</text>
+  <rect x="120" y="106" width="200" height="38" rx="4" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="220" y="130" text-anchor="middle" fill="#111" font-size="12" font-weight="bold">nfexec whoami</text>
+  <line x1="320" y1="125" x2="360" y2="125" stroke="#333" stroke-width="1.5" marker-end="url(#a)"/>
+  <rect x="365" y="106" width="340" height="38" rx="4" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="535" y="121" text-anchor="middle" fill="#111" font-size="12">whoami matches native list (100+ commands)</text>
+  <text x="535" y="137" text-anchor="middle" fill="#111" font-size="12">Routed to exec mode. PS cmdlets to PS mode.</text>
+  <line x1="410" y1="172" x2="410" y2="206" stroke="#333" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="425" y="193" text-anchor="start" fill="#555" font-size="11">sent to target</text>
+  <rect x="30" y="208" width="760" height="692" rx="6" fill="#f7f7f7" stroke="#bbb"/>
+  <text x="50" y="228" fill="#555" font-size="12" font-weight="bold">TARGET SIDE (Demon Process)</text>
+  <rect x="150" y="246" width="520" height="50" rx="4" fill="#eafaf1" stroke="#2e8b57" stroke-width="1.5"/>
+  <text x="410" y="269" text-anchor="middle" fill="#111" font-size="12" font-weight="bold">Syscall Infrastructure Init (ScInit)</text>
+  <text x="410" y="285" text-anchor="middle" fill="#333" font-size="11">PEB walk, ntdll base, syscall;ret gadget</text>
+  <line x1="410" y1="296" x2="410" y2="330" stroke="#333" stroke-width="1.5" marker-end="url(#a)"/>
+  <rect x="310" y="330" width="200" height="34" rx="4" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="410" y="352" text-anchor="middle" fill="#111" font-size="12" font-weight="bold">Mode dispatch</text>
+  <line x1="310" y1="364" x2="215" y2="400" stroke="#2c5aa0" stroke-width="1.5"/>
+  <line x1="510" y1="364" x2="605" y2="400" stroke="#2e8b57" stroke-width="1.5"/>
+  <text x="215" y="414" text-anchor="middle" fill="#2c5aa0" font-size="12" font-weight="bold">mode=1 (Exec)</text>
+  <text x="605" y="414" text-anchor="middle" fill="#2e8b57" font-size="12" font-weight="bold">mode=0 (PS)</text>
+  <rect x="35" y="426" width="360" height="372" rx="6" fill="#eaf0fa" stroke="#2c5aa0" stroke-width="1.5"/>
+  <text x="215" y="444" text-anchor="middle" fill="#2c5aa0" font-size="12" font-weight="bold">Exec — child process as SYSTEM</text>
+  <rect x="425" y="426" width="360" height="372" rx="6" fill="#eafaf1" stroke="#2e8b57" stroke-width="1.5"/>
+  <text x="605" y="444" text-anchor="middle" fill="#2e8b57" font-size="12" font-weight="bold">PS — CLR inline, no child process</text>
+  <rect x="65" y="456" width="300" height="34" rx="3" fill="#fff" stroke="#888"/>
+  <text x="215" y="477" text-anchor="middle" fill="#111" font-size="11">NtOpenThreadToken (indirect syscall)</text>
+  <line x1="215" y1="490" x2="215" y2="502" stroke="#333" stroke-width="1" marker-end="url(#a)"/>
+  <rect x="65" y="502" width="300" height="34" rx="3" fill="#fff" stroke="#888"/>
+  <text x="215" y="523" text-anchor="middle" fill="#111" font-size="11">NtDuplicateToken to Primary token</text>
+  <line x1="215" y1="536" x2="215" y2="548" stroke="#333" stroke-width="1" marker-end="url(#a)"/>
+  <rect x="65" y="548" width="300" height="34" rx="3" fill="#fff" stroke="#888"/>
+  <text x="215" y="569" text-anchor="middle" fill="#111" font-size="11">CreateProcessWithTokenW (PEB-resolved)</text>
+  <line x1="215" y1="582" x2="215" y2="594" stroke="#333" stroke-width="1" marker-end="url(#a)"/>
+  <rect x="65" y="594" width="300" height="34" rx="3" fill="#fff" stroke="#888"/>
+  <text x="215" y="615" text-anchor="middle" fill="#111" font-size="11">Wait 30s + Read pipe output</text>
+  <line x1="215" y1="628" x2="215" y2="640" stroke="#333" stroke-width="1" marker-end="url(#a)"/>
+  <rect x="65" y="640" width="300" height="34" rx="3" fill="#fff" stroke="#888"/>
+  <text x="215" y="661" text-anchor="middle" fill="#111" font-size="11">OEM to UTF-8 convert + BeaconOutput</text>
+  <line x1="215" y1="674" x2="215" y2="686" stroke="#333" stroke-width="1" marker-end="url(#a)"/>
+  <rect x="65" y="686" width="300" height="34" rx="3" fill="#fff" stroke="#2e8b57" stroke-width="1"/>
+  <text x="215" y="707" text-anchor="middle" fill="#111" font-size="11">Scrub cmdline + STARTUPINFO + handles</text>
+  <rect x="75" y="734" width="280" height="52" rx="3" fill="#fff" stroke="#2c5aa0" stroke-width="1"/>
+  <text x="215" y="751" text-anchor="middle" fill="#2c5aa0" font-size="11" font-weight="bold">Why exec mode?</text>
+  <text x="215" y="767" text-anchor="middle" fill="#444" font-size="10">Native exe spawns child processes.</text>
+  <text x="215" y="780" text-anchor="middle" fill="#444" font-size="10">Child gets process token, not impersonation.</text>
+  <rect x="455" y="456" width="300" height="34" rx="3" fill="#fff" stroke="#888"/>
+  <text x="605" y="477" text-anchor="middle" fill="#111" font-size="11">NtOpenThreadToken (indirect syscall)</text>
+  <line x1="605" y1="490" x2="605" y2="502" stroke="#333" stroke-width="1" marker-end="url(#a)"/>
+  <rect x="455" y="502" width="300" height="34" rx="3" fill="#fff" stroke="#888"/>
+  <text x="605" y="523" text-anchor="middle" fill="#111" font-size="11">Create 1MB pipe + build PS wrapper</text>
+  <line x1="605" y1="536" x2="605" y2="548" stroke="#333" stroke-width="1" marker-end="url(#a)"/>
+  <rect x="455" y="548" width="300" height="34" rx="3" fill="#fff" stroke="#888"/>
+  <text x="605" y="569" text-anchor="middle" fill="#111" font-size="11">Load CLR + HWBP AMSI/ETW bypass</text>
+  <line x1="605" y1="582" x2="605" y2="594" stroke="#333" stroke-width="1" marker-end="url(#a)"/>
+  <rect x="455" y="594" width="300" height="34" rx="3" fill="#fff" stroke="#888"/>
+  <text x="605" y="615" text-anchor="middle" fill="#111" font-size="11">Random AppDomain + Load assembly</text>
+  <line x1="605" y1="628" x2="605" y2="640" stroke="#333" stroke-width="1" marker-end="url(#a)"/>
+  <rect x="455" y="640" width="300" height="34" rx="3" fill="#fff" stroke="#888"/>
+  <text x="605" y="661" text-anchor="middle" fill="#111" font-size="11">Execute PS + Read pipe output</text>
+  <line x1="605" y1="674" x2="605" y2="686" stroke="#333" stroke-width="1" marker-end="url(#a)"/>
+  <rect x="455" y="686" width="300" height="34" rx="3" fill="#fff" stroke="#2e8b57" stroke-width="1"/>
+  <text x="605" y="707" text-anchor="middle" fill="#111" font-size="11">Clean HWBP + zero buffers + scrub</text>
+  <rect x="465" y="734" width="280" height="52" rx="3" fill="#fff" stroke="#2e8b57" stroke-width="1"/>
+  <text x="605" y="751" text-anchor="middle" fill="#2e8b57" font-size="11" font-weight="bold">Why PS mode?</text>
+  <text x="605" y="767" text-anchor="middle" fill="#444" font-size="10">PS cmdlets run in-process.</text>
+  <text x="605" y="780" text-anchor="middle" fill="#444" font-size="10">No child = impersonation works directly.</text>
+  <line x1="215" y1="798" x2="215" y2="808" stroke="#333" stroke-width="1"/>
+  <line x1="605" y1="798" x2="605" y2="808" stroke="#333" stroke-width="1"/>
+  <line x1="215" y1="808" x2="605" y2="808" stroke="#333" stroke-width="1.5"/>
+  <line x1="410" y1="808" x2="410" y2="842" stroke="#333" stroke-width="1.5" marker-end="url(#a)"/>
+  <rect x="150" y="842" width="520" height="46" rx="4" fill="#eafaf1" stroke="#2e8b57" stroke-width="1.5"/>
+  <text x="410" y="863" text-anchor="middle" fill="#111" font-size="12" font-weight="bold">ScScrub — Wipe Syscall Infrastructure</text>
+  <text x="410" y="879" text-anchor="middle" fill="#333" font-size="11">Zero ntdll base, gadget addr, SSN, spoof addr</text>
+  <line x1="410" y1="900" x2="410" y2="934" stroke="#333" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="425" y="921" text-anchor="start" fill="#555" font-size="11">callback to client</text>
+  <rect x="160" y="934" width="500" height="42" rx="4" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="410" y="960" text-anchor="middle" fill="#111" font-size="13" font-weight="bold">[+] Received Output displayed in Havoc console</text>
+  <rect x="285" y="994" width="12" height="12" rx="2" fill="#eaf0fa" stroke="#2c5aa0" stroke-width="1"/>
+  <text x="301" y="1005" fill="#444" font-size="10">= Exec mode</text>
+  <rect x="415" y="994" width="12" height="12" rx="2" fill="#eafaf1" stroke="#2e8b57" stroke-width="1"/>
+  <text x="431" y="1005" fill="#444" font-size="10">= PS mode / OPSEC</text>
+</svg>
