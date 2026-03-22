@@ -76,24 +76,24 @@ make
 ### NOFILTER
 
 <!-- TODO: Replace with GitHub image URL after upload -->
-![nofilter-flow]()
+![nofilter-flow](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/nofilter-flow.svg)
 
 ### NFEXEC
 
 <!-- TODO: Replace with GitHub image URL after upload -->
-![nfexec-flow]()
+![nfexec-flow](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/nfexec-flow.svg)
 
 ## OPSEC Details
 
 ### NOFILTER
 
 <!-- TODO: Replace with GitHub image URL after upload -->
-![nofilter-opsec]()
+![nofilter-opsec](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/nofilter-opsec.svg)
 
 ### NFEXEC
 
 <!-- TODO: Replace with GitHub image URL after upload -->
-![nfexec-opsec]()
+![nfexec-opsec](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/nfexec-flow.svg)
 
 ## Acknowledgments
 
