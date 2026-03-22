@@ -65,7 +65,7 @@ nfexec auto-detects ~100 native commands (whoami, ipconfig, net, sc, reg, ...) a
 ## Install
 
 ```bash
-cp -r NOFILTER/ /usr/share/havoc/data/extensions/NOFILTER/
+cp -r NOFILTER-NFEXEC/ /usr/share/havoc/data/extensions/NOFILTER-NFEXEC/
 # Load nofilter.py and nfexec.py in Havoc Script Manager
 ```
 
