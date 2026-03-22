@@ -1,4 +1,4 @@
-# NFEXEC - Makefile
+# NOFILTER-NFEXEC — Unified Makefile
 #
 # Prerequisites (Debian / Ubuntu):
 #   apt install gcc-mingw-w64-x86-64
@@ -6,41 +6,41 @@
 CC_X64  = x86_64-w64-mingw32-gcc
 CFLAGS  = -c -w
 
-SRC     = nfexec.c
 OUT_DIR = bin
-OUT_X64 = $(OUT_DIR)/nfexec.x64.o
+NF_OBJ  = $(OUT_DIR)/nofilter.x64.o
+NX_OBJ  = $(OUT_DIR)/nfexec.x64.o
 
 .PHONY: all clean verify
 
-all: $(OUT_X64) verify
+all: $(NF_OBJ) $(NX_OBJ) verify
 
 $(OUT_DIR):
 	mkdir -p $(OUT_DIR)
 
-$(OUT_X64): $(SRC) beacon.h PowershellRunner.h syms.map | $(OUT_DIR)
-	@cp $(SRC) _t.c
-	$(CC_X64) $(CFLAGS) _t.c -o $(OUT_X64)
-	@rm -f _t.c
-	@x86_64-w64-mingw32-objcopy --redefine-sym _t.c=_b --redefine-syms syms.map $(OUT_X64) 2>/dev/null || true
+$(NF_OBJ): nofilter.c beacon.h nofilter.syms | $(OUT_DIR)
+	@cp nofilter.c _nf.c
+	$(CC_X64) $(CFLAGS) _nf.c -o $(NF_OBJ)
+	@rm -f _nf.c
+	@x86_64-w64-mingw32-objcopy --redefine-sym _nf.c=_b --redefine-syms nofilter.syms $(NF_OBJ) 2>/dev/null || true
 
-verify: $(OUT_X64)
+$(NX_OBJ): nfexec.c beacon.h PowershellRunner.h nfexec.syms | $(OUT_DIR)
+	@cp nfexec.c _nx.c
+	$(CC_X64) $(CFLAGS) _nx.c -o $(NX_OBJ)
+	@rm -f _nx.c
+	@x86_64-w64-mingw32-objcopy --redefine-sym _nx.c=_b --redefine-syms nfexec.syms $(NX_OBJ) 2>/dev/null || true
+
+verify: $(NF_OBJ) $(NX_OBJ)
 	@echo ""
 	@echo "=== Build Verification ==="
-	@file $(OUT_X64)
-	@echo ""
-	@objdump -t $(OUT_X64) | grep " go$$" || echo "[!] 'go' symbol not found"
-	@echo ""
-	@echo "--- .bss ---"
-	@objdump -h $(OUT_X64) | grep '\.bss' | awk '{print "  size: " $$3}'
-	@echo ""
-	@echo "--- Beacon symbols ---"
-	@objdump -t $(OUT_X64) | grep '__imp_Beacon' | sed 's/.*__imp_/  __imp_/'
-	@echo ""
-	@echo "--- OPSEC strings ---"
-	@strings $(OUT_X64) | grep -iE 'amsi|etw|nfexec' || echo "  [OK] Clean"
-	@echo ""
-	@echo "--- OPSEC symbols (should be empty) ---"
-	@objdump -t $(OUT_X64) | grep -iE 'Peb|Ssn|Gadget|Veh|Setup|Hwbp|Syscall|Powershell|Runner|Extract' | grep -v '__imp_\|\.rdata' || echo "  [OK] All sanitized"
+	@for obj in $(NF_OBJ) $(NX_OBJ); do \
+		echo ""; \
+		echo "--- $$obj ---"; \
+		file $$obj; \
+		objdump -t $$obj | grep " go$$" || echo "[!] 'go' not found"; \
+		echo "  .bss: $$(objdump -h $$obj | grep '\.bss' | awk '{print $$3}')"; \
+		echo "  OPSEC strings: $$(strings $$obj | grep -ciE '^amsi|^etw|nfexec|nofilter')"; \
+		echo "  OPSEC symbols: $$(objdump -t $$obj | grep -v '__imp_' | grep -ciE 'peb|ssn|gadget|veh|setup|hwbp|syscall|powershell|runner|extract|amsi|etw|handle|token|proc|ioctl|enc|svc')"; \
+	done
 	@echo ""
 	@echo "=== Done ==="
 
