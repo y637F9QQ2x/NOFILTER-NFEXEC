@@ -80,24 +80,24 @@ make
 ### NOFILTER
 
 <!-- TODO: Replace with GitHub image URL after upload -->
-![nofilter-flow](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/nofilter-flow.svg)
+![nofilter-flow](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/img/nofilter-flow.svg)
 
 ### NFEXEC
 
 <!-- TODO: Replace with GitHub image URL after upload -->
-![nfexec-flow](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/nfexec-flow.svg)
+![nfexec-flow](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/img/nfexec-flow.svg)
 
 ## OPSEC Details
 
 ### NOFILTER
 
 <!-- TODO: Replace with GitHub image URL after upload -->
-![nofilter-opsec](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/nofilter-opsec.svg)
+![nofilter-opsec](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/img/nofilter-opsec.svg)
 
 ### NFEXEC
 
 <!-- TODO: Replace with GitHub image URL after upload -->
-![nfexec-opsec](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/nfexec-opsec.svg)
+![nfexec-opsec](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/img/nfexec-opsec.svg)
 
 ## Acknowledgments
 
