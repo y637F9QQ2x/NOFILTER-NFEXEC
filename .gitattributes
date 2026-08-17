@@ -1,0 +1,14 @@
+# Normalise the repository to LF. The build was previously sensitive to this:
+# with core.autocrlf=true a Windows clone produced CRLF working-tree files, and
+# a CRLF Makefile breaks GNU make recipes that use backslash continuations and
+# shell traps.
+* text=auto eol=lf
+
+Makefile text eol=lf
+*.c       text eol=lf
+*.h       text eol=lf
+*.py      text eol=lf
+*.syms    text eol=lf
+*.md      text eol=lf
+
+*.o binary

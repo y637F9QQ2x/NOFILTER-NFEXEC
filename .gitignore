@@ -1,0 +1,9 @@
+# Build output — regenerate with `make`
+bin/
+
+# Compile-stage temporaries (see Makefile: the temp name becomes the COFF
+# source symbol, which objcopy rewrites to _b)
+_nf.c
+_nx.c
+
+*.o

@@ -29,75 +29,43 @@ nfexec auto-detects ~100 native commands (whoami, ipconfig, net, sc, reg, ...) a
 
 ![NOFILTER-NFEXEC_DEMO](https://github.com/user-attachments/assets/76efa4a3-a337-4314-bac5-6847e84f1a92)
 
-## OPSEC
+## Layout
 
-### NOFILTER
-
-| Property | Detail |
-|---|---|
-| Token duplication | Kernel-space via tcpip.sys IOCTLs (user-mode hooks not triggered) |
-| Syscalls | All Nt* via Havoc NtApi[] indirect syscall |
-| Static signatures | XOR-encoded strings (WfpAle, lsass, services, BFE, File, Token) |
-| Symbol table | 20 symbols sanitized via objcopy |
-| Error messages | Opaque codes only ([!] E01–E11, [+] S1–S9) |
-| Memory scrubbing | Decoded strings zeroed on stack after use |
-| KERNEL32 imports | Zero |
-
-### NFEXEC
-
-| Property | Detail |
-|---|---|
-| AMSI | HWBP DR0 + VEH: result=CLEAN, RAX=S_OK (patchless) |
-| ETW | HWBP DR1 + VEH: RAX=0 (patchless) |
-| Memory modification | None |
-| Indirect syscall | PEB walk + Halo's Gate SSN + syscall;ret gadget in ntdll |
-| Return address spoofing | Stack frame points to ntdll ret gadget, not BOF memory |
-| Function resolution | FNV-1a hash — no function name strings in binary |
-| ADVAPI32 imports | Zero (CreateProcessWithTokenW resolved via PEB walk) |
-| KERNEL32 imports | 5 only (pipe I/O + string conversion, irreplaceable) |
-| Static signatures | XOR-encoded function names, zero IOC strings in .rdata |
-| Symbol table | 34 symbols sanitized via objcopy |
-| Error messages | Opaque codes only ([!] E00–E19) |
-| Memory scrubbing | ScScrub zeros ntdll base/gadget/SSN; STARTUPINFO + cmdline zeroed |
-| CLM bypass | Custom Runspace = FullLanguage |
-| AppDomain | Random name per execution |
-
-## Install
-
-```bash
-cp -r NOFILTER-NFEXEC/ /usr/share/havoc/data/extensions/NOFILTER-NFEXEC/
-# Load nofilter.py and nfexec.py in Havoc Script Manager
+```
+src/     C sources, headers, objcopy symbol maps
+havoc/   Havoc Script Manager scripts
+bin/     build output (not tracked in git -- run `make` to produce it)
 ```
 
 ## Build
+
+Requires the MinGW-w64 cross compiler:
+
+```bash
+apt install gcc-mingw-w64-x86-64
+```
 
 ```bash
 make
 ```
 
-## How It Works
+`make` compiles both BOFs into `bin/` and then verifies each object: valid
+x86-64 COFF, `go()` entry point exported, empty `.bss`, no plaintext strings,
+no leftover symbol names, no `BeaconFormat*` references. Any failed check
+fails the build.
 
-### NOFILTER
+## Install
 
-<!-- TODO: Replace with GitHub image URL after upload -->
-![nofilter-flow](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/img/nofilter-flow.svg)
+Build first -- `bin/` is not tracked in git, so a fresh clone has no objects.
 
-### NFEXEC
+```bash
+make
+cp -r NOFILTER-NFEXEC/ /usr/share/havoc/data/extensions/NOFILTER-NFEXEC/
+# Load havoc/nofilter.py and havoc/nfexec.py in Havoc Script Manager
+```
 
-<!-- TODO: Replace with GitHub image URL after upload -->
-![nfexec-flow](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/img/nfexec-flow.svg)
-
-## OPSEC Details
-
-### NOFILTER
-
-<!-- TODO: Replace with GitHub image URL after upload -->
-![nofilter-opsec](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/img/nofilter-opsec.svg)
-
-### NFEXEC
-
-<!-- TODO: Replace with GitHub image URL after upload -->
-![nfexec-opsec](https://github.com/y637F9QQ2x/NOFILTER-NFEXEC/blob/main/img/nfexec-opsec.svg)
+`BOF_DIR` at the top of each script points at the installed `bin/` directory;
+edit it if you install somewhere else.
 
 ## Acknowledgments
 
